@@ -82,8 +82,9 @@ exclude_sites:
   - aceita formato amigavel (ex.: 45s, 10m, 4h, 2d)
 - exclude_sites:
   - lista de trechos de dominio/URL para ignorar durante a analise
-  - se a URL contiver qualquer item da lista, o resultado e excluido
-  - nao e baixado, nao e enviado para sumarizacao e nao aparece no manifesto/links finais
+  - se a URL contiver qualquer item da lista, o resultado é excluido
+  - nao é baixado, nao é enviado para sumarizacao e nao aparece no manifesto/links finais
+  - Usado para não fazer download de conteúdo não suportado pelo seu modelo de IA
 
 ## Uso
 
