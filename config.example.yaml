@@ -1,0 +1,20 @@
+# Configuração de exemplo do SEARCHAI.
+# Copie este arquivo para $HOME/searchai/config.yaml ou use --config config.yaml.
+
+api_endpoint: http://127.0.0.1:1234
+max_results: 10
+download_timeout: 20
+max_download_bytes: 2000000
+max_prompt_chars: 8192
+
+engines:
+  - duckduckgo
+  # - google
+  # - bing
+
+engines_config:
+  google:
+    api_key: sua-chave-google
+    search_engine_id: seu-id-cse
+  bing:
+    api_key: sua-chave-bing
