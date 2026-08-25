@@ -67,6 +67,10 @@ exclude_sites:
 
 engines:
   - duckduckgo
+
+exclude_sites:
+  - youtube.com
+  - vimeo.com
 ```
 
 ### Campos importantes
