@@ -25,17 +25,23 @@ Ferramenta de linha de comando para pesquisar na web, baixar o conteudo das font
 1. Clonar o repositorio.
 2. Instalar dependencias:
 
+```
 uv sync
+```
 
 ## Inicio rapido
 
 1. Rode uma busca simples (usa configuracao padrao):
 
+```
 uv run main.py energia solar brasil
+```
 
 2. Ou passe via stdin:
 
+```
 echo "energia solar brasil" | uv run main.py
+```
 
 ## Configuracao
 
