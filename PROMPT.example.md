@@ -1,0 +1,3 @@
+O conteúdo abaixo foi agregado de uma busca dos termos: INCLUIR_TERMOS_DA_BUSCA_ORIGINAL
+
+Resumir o conteúdo de forma compreensiva e organizada, colocando o máximo de informações possíveis que foram encontradas na busca. Use tabelas, exemplos e referências reais das fontes pesquisdas. Informar sempre que você fizer alguma presunção ou não souber a resposta. O conteúdo final deve ser explicativo compreensivo. Se os termos de busca possuem instruções, siga elas também no sentido de sanar qualquer dúvida exercida nos termos de busca.
