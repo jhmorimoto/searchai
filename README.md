@@ -61,6 +61,9 @@ download_timeout: 20
 max_download_bytes: 2000000
 max_prompt_chars: 100000
 model_timeout: 30m
+exclude_sites:
+  - youtube.com
+  - vimeo.com
 
 engines:
   - duckduckgo
@@ -73,6 +76,10 @@ engines:
 - model_timeout:
   - aceita numero em segundos (ex.: 600)
   - aceita formato amigavel (ex.: 45s, 10m, 4h, 2d)
+- exclude_sites:
+  - lista de trechos de dominio/URL para ignorar durante a analise
+  - se a URL contiver qualquer item da lista, o resultado e excluido
+  - nao e baixado, nao e enviado para sumarizacao e nao aparece no manifesto/links finais
 
 ## Uso
 
@@ -95,6 +102,11 @@ Arquivos principais:
 - 001_*.md, 002_*.md...: resumo por fonte
 - manifest.json: rastreabilidade dos resultados, downloads e falhas
 - summary.md: resumo final com links encontrados
+
+Observacao sobre `exclude_sites`:
+
+- URLs filtradas por `exclude_sites` sao removidas do fluxo antes do download.
+- Por isso, essas URLs tambem nao entram em `manifest.json` nem na secao de links do `summary.md`.
 
 ## Solucao de problemas
 
