@@ -84,9 +84,11 @@ uv run main.py mudancas climatica transicao energetica
 
 ## Saida gerada
 
-Cada execucao cria uma pasta em $HOME/searchai no formato:
+Cada execucao cria uma pasta em `$HOME/searchai` no formato:
 
+```
 YYYY-MM-dd_HHmmss_<motores>_<consulta>
+```
 
 Arquivos principais:
 
