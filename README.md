@@ -67,10 +67,6 @@ exclude_sites:
 
 engines:
   - duckduckgo
-
-exclude_sites:
-  - youtube.com
-  - vimeo.com
 ```
 
 ### Campos importantes
@@ -85,6 +81,23 @@ exclude_sites:
   - se a URL contiver qualquer item da lista, o resultado é excluido
   - nao é baixado, nao é enviado para sumarizacao e nao aparece no manifesto/links finais
   - Usado para não fazer download de conteúdo não suportado pelo seu modelo de IA
+
+## Sobre o PROMPT.md
+
+O arquivo PROMPT.md controla as instrucoes enviadas ao modelo de IA para gerar os resumos.
+
+Como funciona:
+
+- O sistema le o arquivo PROMPT.md no diretorio atual de execucao.
+- O conteudo desse arquivo vai como mensagem de sistema para o modelo.
+- O marcador INCLUIR_TERMOS_DA_BUSCA_ORIGINAL, quando presente, é substituido automaticamente pelos termos da consulta.
+
+Boas praticas:
+
+- Escreva instrucoes objetivas sobre formato de resposta e nivel de detalhe.
+- Defina secoes esperadas no resumo final (ex.: contexto, pontos-chave, riscos, conclusao).
+- Evite instrucoes muito longas ou contraditorias.
+- Versione o PROMPT.md junto do projeto para manter consistencia entre execucoes.
 
 ## Uso
 

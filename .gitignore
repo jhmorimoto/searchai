@@ -1,4 +1,5 @@
 .venv
 config.yaml
 search-results
+PROMPT.md
 **/__pycache__
