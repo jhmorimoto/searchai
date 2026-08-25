@@ -48,14 +48,16 @@ def _build_client(provider: str, endpoint: str, api_key: str | None, model_timeo
     return OpenAI(base_url=_normalize_base_url(endpoint), api_key="lm-studio", timeout=model_timeout)
 
 
-def load_prompt_instructions(query: str, prompt_path: Path | None = None) -> str:
+def load_prompt_instructions(query: str, prompt_path: Path | None = None) -> str | None:
     path = prompt_path or (Path.cwd() / PROMPT_FILENAME)
+    if not path.exists():
+        return None
     try:
         instructions = path.read_text(encoding="utf-8").strip()
     except OSError as exc:
         raise RuntimeError(f"não foi possível ler o prompt {path}: {exc}") from exc
     if not instructions:
-        raise RuntimeError(f"o prompt {path} está vazio")
+        return None
     return instructions.replace("INCLUIR_TERMOS_DA_BUSCA_ORIGINAL", query)
 
 
@@ -90,12 +92,13 @@ def summarize(
         remaining -= len(section)
     prompt = f"{user_prefix}{''.join(sections)}"
     _log_model_request(provider, selected_model, documents)
+    messages: list[dict[str, str]] = []
+    if instructions:
+        messages.append({"role": "system", "content": instructions})
+    messages.append({"role": "user", "content": prompt})
     response = client.chat.completions.create(
         model=selected_model,
-        messages=[
-            {"role": "system", "content": instructions},
-            {"role": "user", "content": prompt},
-        ],
+        messages=messages,
         temperature=0.2,
     )
     content = response.choices[0].message.content
