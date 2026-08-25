@@ -12,6 +12,7 @@ from .models import DownloadedDocument
 PROMPT_FILENAME = "PROMPT.md"
 DEFAULT_CHATGPT_MODEL = "gpt-4.1-mini"
 DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+_PROMPT_WARNING_EMITTED = False
 
 
 def _log_model_request(provider: str, model: str, documents: list[DownloadedDocument]) -> None:
@@ -49,8 +50,16 @@ def _build_client(provider: str, endpoint: str, api_key: str | None, model_timeo
 
 
 def load_prompt_instructions(query: str, prompt_path: Path | None = None) -> str | None:
+    global _PROMPT_WARNING_EMITTED
     path = prompt_path or (Path.cwd() / PROMPT_FILENAME)
     if not path.exists():
+        if not _PROMPT_WARNING_EMITTED:
+            print(
+                "WARNING: PROMPT.md não encontrado no diretório atual. "
+                "Você pode customizar os resumos criando esse arquivo.",
+                file=sys.stderr,
+            )
+            _PROMPT_WARNING_EMITTED = True
         return None
     try:
         instructions = path.read_text(encoding="utf-8").strip()
