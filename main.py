@@ -17,7 +17,7 @@ from searchai.summarize import summarize
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Pesquisa na internet e resume com LMStudio.")
     parser.add_argument("--config", help="caminho do arquivo YAML de configuração")
-    parser.add_argument("--query", help="termos da pesquisa; sem este argumento, lê uma linha do stdin")
+    parser.add_argument("terms", nargs="*", help="termos da pesquisa; sem termos posicionais, lê uma linha do stdin")
     parser.add_argument("--api-endpoint")
     parser.add_argument("--search-engine", action="append", dest="engines", metavar="NOME")
     parser.add_argument("--max-results", type=int)
@@ -53,9 +53,9 @@ def run(args: argparse.Namespace) -> int:
         max_prompt_chars=args.max_prompt_chars,
         model=args.model,
     )
-    query = (args.query or sys.stdin.readline()).strip()
+    query = " ".join(args.terms).strip() if args.terms else sys.stdin.readline().strip()
     if not query:
-        raise ConfigError("informe uma consulta com --query ou stdin")
+        raise ConfigError("informe uma consulta com argumentos posicionais ou stdin")
 
     output_dir = create_output_dir(query, config.engines)
     results: list[SearchResult] = []
