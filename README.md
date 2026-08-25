@@ -47,8 +47,8 @@ echo "energia solar brasil" | uv run main.py
 
 Sem --config, o programa procura nesta ordem:
 
-1. ./config.yaml
-2. $HOME/.config/searchai/config.yaml
+1. `./config.yaml`
+2. `$HOME/.config/searchai/config.yaml`
 
 Exemplo de config.yaml:
 
