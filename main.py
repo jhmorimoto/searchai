@@ -15,15 +15,18 @@ from searchai.summarize import summarize
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Pesquisa na internet e resume com LMStudio.")
+    parser = argparse.ArgumentParser(description="Pesquisa na internet e resume com IA (LMStudio, ChatGPT ou Gemini).")
     parser.add_argument("--config", help="caminho do arquivo YAML de configuração")
     parser.add_argument("terms", nargs="*", help="termos da pesquisa; sem termos posicionais, lê uma linha do stdin")
+    parser.add_argument("--ai-provider", choices=("lmstudio", "chatgpt", "gemini"))
+    parser.add_argument("--api-key")
     parser.add_argument("--api-endpoint")
     parser.add_argument("--search-engine", action="append", dest="engines", metavar="NOME")
     parser.add_argument("--max-results", type=int)
     parser.add_argument("--download-timeout", type=float, dest="download_timeout")
     parser.add_argument("--max-download-bytes", type=int, dest="max_download_bytes")
     parser.add_argument("--max-prompt-chars", type=int, dest="max_prompt_chars")
+    parser.add_argument("--model-timeout", type=float, dest="model_timeout")
     parser.add_argument("--model")
     return parser.parse_args()
 
@@ -45,12 +48,15 @@ def unique_results(results: list[SearchResult]) -> list[SearchResult]:
 def run(args: argparse.Namespace) -> int:
     config = merge_cli(
         load_config(args.config),
+        ai_provider=args.ai_provider,
+        api_key=args.api_key,
         api_endpoint=args.api_endpoint,
         engines=args.engines,
         max_results=args.max_results,
         download_timeout=args.download_timeout,
         max_download_bytes=args.max_download_bytes,
         max_prompt_chars=args.max_prompt_chars,
+        model_timeout=args.model_timeout,
         model=args.model,
     )
     query = " ".join(args.terms).strip() if args.terms else sys.stdin.readline().strip()
@@ -79,11 +85,14 @@ def run(args: argparse.Namespace) -> int:
             print(f"Erro ao baixar {result.url}: {document.error}", file=sys.stderr)
         else:
             document.text = summarize(
+                config.ai_provider,
                 config.api_endpoint,
+                config.api_key,
                 query,
                 [document],
                 config.model,
                 config.max_prompt_chars,
+                config.model_timeout,
             )
             write_document(output_dir, index, document)
             documents.append(document)
@@ -91,7 +100,16 @@ def run(args: argparse.Namespace) -> int:
     if not documents:
         raise RuntimeError(f"nenhum conteúdo foi baixado; resultados em {output_dir}")
 
-    summary = summarize(config.api_endpoint, query, documents, config.model, config.max_prompt_chars)
+    summary = summarize(
+        config.ai_provider,
+        config.api_endpoint,
+        config.api_key,
+        query,
+        documents,
+        config.model,
+        config.max_prompt_chars,
+        config.model_timeout,
+    )
     summary_with_links = f"{summary}\n\n{format_links(results)}\n"
     (output_dir / "summary.md").write_text(summary_with_links, encoding="utf-8")
     print(f"\nResumo:\n{summary_with_links}\nArquivos: {output_dir}")
@@ -105,7 +123,7 @@ def main() -> int:
         print(f"Erro: {exc}", file=sys.stderr)
         return 1
     except Exception as exc:
-        print(f"Erro ao acessar o LMStudio ou executar a pesquisa: {exc}", file=sys.stderr)
+        print(f"Erro ao acessar o provedor de IA ou executar a pesquisa: {exc}", file=sys.stderr)
         return 1
 
 

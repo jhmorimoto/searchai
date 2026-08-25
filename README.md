@@ -27,7 +27,7 @@ Agente de linha de comando que pesquisa na internet, baixa o conteúdo das pági
 
 - Python 3.14 ou superior
 - [uv](https://docs.astral.sh/uv/)
-- LMStudio executando um servidor compatível com a API OpenAI
+- LMStudio executando um servidor compatível com a API OpenAI, conta da OpenAI para usar ChatGPT, ou chave da API Gemini
 - Uma conexão com a internet
 
 ## Instalação
@@ -44,10 +44,13 @@ Exemplo:
 
 ```yaml
 api_endpoint: http://127.0.0.1:1234
+ai_provider: lmstudio
+api_key: null
 max_results: 5
 download_timeout: 20
 max_download_bytes: 2000000
 max_prompt_chars: 100000
+model_timeout: 10m
 
 engines:
   - duckduckgo
@@ -64,16 +67,26 @@ engines_config:
 
 Os motores disponíveis são `duckduckgo`, `google` e `bing`. Google também pode usar `GOOGLE_API_KEY` e `GOOGLE_CSE_ID`; Bing pode usar `BING_API_KEY`. Evite armazenar chaves reais em arquivos versionados.
 
+`ai_provider` aceita `lmstudio` (padrão), `chatgpt` ou `gemini`.
+Quando `ai_provider: chatgpt`, a chave pode ser informada em `api_key`, `--api-key` ou na variável de ambiente `OPENAI_API_KEY`.
+Quando `ai_provider: gemini`, a chave pode ser informada em `api_key`, `--api-key`, `GEMINI_API_KEY` ou `GOOGLE_API_KEY`.
+
+Se `api_endpoint` estiver ausente no YAML:
+- `chatgpt` usa `https://api.openai.com`
+- `gemini` usa `https://generativelanguage.googleapis.com/v1beta/openai`
+
+`model_timeout` aceita segundos como número (ex.: `600`) ou duração amigável com sufixo `s`, `m`, `h` ou `d` (ex.: `45s`, `10m`, `4h`, `2d`).
+
 Valores informados na linha de comando têm precedência sobre o YAML. Quando `--search-engine` não é usado, o programa utiliza a lista `engines` do arquivo. Sem arquivo e sem argumento, o padrão é `duckduckgo`.
 
 ## Uso
 
 Antes de resumir, o programa carrega as instruções de `PROMPT.md` no diretório atual e as envia como a primeira mensagem ao LMStudio. A consulta e o conteúdo das páginas coletadas são enviados em seguida. O marcador `INCLUIR_TERMOS_DA_BUSCA_ORIGINAL`, quando presente, é substituído pelos termos reais da consulta.
 
-Uma consulta pode ser passada diretamente:
+Uma consulta pode ser passada diretamente com termos posicionais:
 
 ```bash
-uv run main.py --query "mudanças recentes em energia solar"
+uv run main.py mudancas recentes em energia solar
 ```
 
 Ou lida de uma linha do stdin:
@@ -82,24 +95,40 @@ Ou lida de uma linha do stdin:
 echo "mudanças recentes em energia solar" | uv run main.py
 ```
 
+Usando ChatGPT:
+
+```bash
+OPENAI_API_KEY=sua-chave uv run main.py --ai-provider chatgpt mudancas recentes em energia solar
+```
+
+Usando Gemini:
+
+```bash
+GEMINI_API_KEY=sua-chave uv run main.py --ai-provider gemini mudancas recentes em energia solar
+```
+
 Argumentos disponíveis:
 
 ```text
 --config PATH                 Arquivo YAML alternativo
---query TEXT                  Consulta; sem ele, lê stdin
+TERMOS...                     Consulta; sem termos, lê stdin
+--ai-provider {lmstudio,chatgpt,gemini}
+                              Provedor de IA para resumo
+--api-key CHAVE               Chave da API (chatgpt/gemini)
 --api-endpoint URL            Endpoint do LMStudio
 --search-engine NOME         Pode ser repetido e substitui engines do YAML
 --max-results N               Resultados por motor
 --download-timeout SEGUNDOS   Timeout de cada download
 --max-download-bytes N        Tamanho máximo de cada página
 --max-prompt-chars N          Tamanho máximo enviado ao modelo
---model NOME                  Modelo do LMStudio; por padrão, usa o primeiro disponível
+--model-timeout SEGUNDOS      Timeout de resposta da IA
+--model NOME                  Modelo da IA; chatgpt usa gpt-4.1-mini e gemini usa gemini-2.5-flash
 ```
 
 Também é possível executar pelo Makefile:
 
 ```bash
-make run ARGS='--query "termo de busca" --search-engine duckduckgo'
+make run ARGS='termo de busca --search-engine duckduckgo'
 ```
 
 ## Saída

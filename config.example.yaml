@@ -1,11 +1,23 @@
 # Configuração de exemplo do SEARCHAI.
 # Copie este arquivo para $HOME/searchai/config.yaml ou use --config config.yaml.
 
+# Para LMStudio, mantenha o endpoint local. Para chatgpt/gemini, pode comentar esta linha.
 api_endpoint: http://127.0.0.1:1234
+ai_provider: lmstudio
+
+# Quando ai_provider: chatgpt e api_endpoint estiver ausente, usa https://api.openai.com automaticamente.
+# ai_provider: chatgpt
+# api_key: sk-...
+
+# Quando ai_provider: gemini e api_endpoint estiver ausente, usa https://generativelanguage.googleapis.com/v1beta/openai automaticamente.
+# ai_provider: gemini
+# api_key: AIza...
+
 max_results: 10
 download_timeout: 20
 max_download_bytes: 2000000
 max_prompt_chars: 8192
+model_timeout: 10m
 
 engines:
   - duckduckgo

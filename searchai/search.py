@@ -20,7 +20,13 @@ class DuckDuckGoEngine:
     name = "duckduckgo"
 
     def search(self, query: str, max_results: int) -> list[SearchResult]:
-        rows = DDGS().text(query, max_results=max_results)
+        try:
+            rows = DDGS().text(query, max_results=max_results)
+        except Exception as exc:
+            # DDGS raises this when no entries are returned; treat as an empty search.
+            if "No results found" in str(exc):
+                return []
+            raise
         return [
             SearchResult(
                 engine=self.name,
