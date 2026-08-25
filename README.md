@@ -68,7 +68,7 @@ engines:
 
 ### Campos importantes
 
-- ai_provider: lmstudio, chatgpt ou gemini.
+- ai_provider: lmstudio (por enquanto apenas este)
 - api_endpoint: url do seu provedor de IA local, ex: http://127.0.0.1:1234
 - model_timeout:
   - aceita numero em segundos (ex.: 600)
