@@ -17,16 +17,21 @@ max_results: 10
 download_timeout: 20
 max_download_bytes: 2000000
 max_prompt_chars: 8192
-model_timeout: 10m
+model_timeout: 30m
 
 engines:
+  # free with limited usage
   - duckduckgo
+
   # - google
   # - bing
 
-engines_config:
-  google:
-    api_key: sua-chave-google
-    search_engine_id: seu-id-cse
-  bing:
-    api_key: sua-chave-bing
+##
+## Google and Bing API not yet supported
+##
+# engines_config:
+#   google:
+#     api_key: sua-chave-google
+#     search_engine_id: seu-id-cse
+#   bing:
+#     api_key: sua-chave-bing
