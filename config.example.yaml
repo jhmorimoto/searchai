@@ -26,12 +26,6 @@ engines:
   # - google
   # - bing
 
-##
-## Google and Bing API not yet supported
-##
-# engines_config:
-#   google:
-#     api_key: sua-chave-google
-#     search_engine_id: seu-id-cse
-#   bing:
-#     api_key: sua-chave-bing
+exclude_sites:
+  - youtube.com
+  - vimeo.com
